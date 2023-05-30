@@ -1,6 +1,6 @@
 public class Point() {
-    long x;
-    long y;  
+    private long x;
+    private long y;  
 
     public Point(long x, long y) {
         this.x = x;
@@ -12,9 +12,9 @@ public class Point() {
     }
 
     public long getY() {
-        return y
+        return y;
         
-        ;
+        
     }
 }
 
