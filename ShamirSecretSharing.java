@@ -31,9 +31,7 @@ public ShamirSecretSharing(int threshold, int shareNumber, BigInteger secret, Bi
         BigInteger randomBigInt = new BigInteger(8, secureRandom);
         polynomial[i] = randomBigInt; 
     }
-    for (BigInteger j : polynomial) {
-        System.out.println(j.toString(10));
-    }
+
 }
 
 // evaluate polynomial
@@ -47,7 +45,7 @@ private BigInteger evaluatePolynomial(int x) {
     }
 
     sum = sum.mod(primeInt);
-    System.out.println("sum" + sum.toString());
+   
     return sum;
 }
 
@@ -63,38 +61,54 @@ public BigInteger[] generateShares() {
         shares[x] = evaluatePolynomial(x + 1);
         
     }
-    System.out.println("shares" + shares[0].toString());
+
     return shares;
+}
+private BigInteger lagrangeBasis(int j, BigInteger[] xValues, BigInteger x) {
+    BigInteger result = BigInteger.ONE;
+
+    for (int m = 0; m < xValues.length; m++) {
+        if (m != j) {
+            BigInteger numerator = x.subtract(xValues[m]);
+            BigInteger denominator = xValues[j].subtract(xValues[m]);
+            BigInteger term = numerator.multiply(denominator.modInverse(this.primeInt));
+            result = result.multiply(term).mod(this.primeInt);
+        }
+    }
+
+    return result;
+
+}
+
+
+public BigInteger interpolate(BigInteger[] yValues) {
+    BigInteger sum = BigInteger.ZERO;
+
+    for (int j = 0; j < yValues.length; j++) {
+        BigInteger xJ = BigInteger.valueOf(j + 1); // x value is index + 1
+        BigInteger lagrangeProduct = BigInteger.ONE;
+
+        for (int m = 0; m < yValues.length; m++) {
+            if (m != j) {
+                BigInteger xM = BigInteger.valueOf(m + 1); // x value is index + 1
+                BigInteger numerator = this.primeInt.subtract(xM); // x - x_m
+                BigInteger denominator = xJ.subtract(xM).mod(this.primeInt); // x_j - x_m
+                BigInteger term = numerator.multiply(denominator.modInverse(this.primeInt));
+                lagrangeProduct = lagrangeProduct.multiply(term).mod(this.primeInt);
+            }
+        }
+
+        BigInteger term = yValues[j].multiply(lagrangeProduct);
+        sum = sum.add(term).mod(this.primeInt);
+    }
+
+    return sum;
 }
 
 
 
 
-// interpolate method
 
-// public BigInteger interpolate() {
-    
-// }
-// reconstruct
-    public BigInteger[] interpolate(BigInteger[] yValues) {
-        int n = yValues.length;
-        BigInteger[] polynomial = new BigInteger[n];
 
-        for (int i = 0; i < n; i++) {
-            BigInteger numerator = BigInteger.ONE;
-            BigInteger denominator = BigInteger.ONE;
 
-            for (int j = 0; j < n; j++) {
-                if (i != j) {
-                    numerator = numerator.multiply(BigInteger.valueOf(j + 1).negate());
-                    denominator = denominator.multiply(BigInteger.valueOf(i + 1).subtract(BigInteger.valueOf(j + 1)));
-                }
-            }
-
-            BigInteger coefficient = yValues[i].multiply(numerator).multiply(denominator.modInverse(primeInt));
-            polynomial[i] = coefficient.mod(primeInt);
-        }
-
-        return polynomial;
-    }
-}   
+}

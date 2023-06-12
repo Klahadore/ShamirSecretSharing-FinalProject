@@ -11,16 +11,13 @@ public class Testing {
         BigInteger secret = BigInteger.valueOf(1234);
         ShamirSecretSharing sss = new ShamirSecretSharing(3, 6, secret, primeField, secureRandom); 
 
-        sss.generateShares();
+       
 
-        BigInteger[] shares = new BigInteger[6];
+        BigInteger[] cheese = sss.generateShares();
+     
         
-        for (BigInteger i : shares) {
-            System.out.println(i);
-        }
-
-        BigInteger[] finalPolynomial = sss.interpolate(shares);
-        System.out.println(finalPolynomial[0]);
+        BigInteger finalPolynomial = sss.interpolate(cheese);
+        System.out.println(finalPolynomial);
     
     }
 
