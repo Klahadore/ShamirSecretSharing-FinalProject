@@ -26,6 +26,10 @@ public class Testing {
             int thresholdNumber = scanner.nextInt();
             scanner.nextLine();
 
+            if (thresholdNumber >= shareNumber) {
+                System.out.println("Threshold Number must be less than shareNumber");
+                System.exit(0);
+            }
             SecureRandom secure = new SecureRandom();
 
             ShamirSecretSharing shamir = new ShamirSecretSharing(thresholdNumber, shareNumber, secretNumber , field, secure);
@@ -43,14 +47,18 @@ public class Testing {
                 scanner.nextLine();
 
                 BigInteger[] shares = new BigInteger[numberOfShares];
-
+                BigInteger[] shareNumbers = new BigInteger[numberOfShares];
                 for (int i = 0; i < numberOfShares; i++) {
                     System.out.println("Enter value for share #" + (i+1));
                     BigInteger shareValue = new BigInteger(scanner.nextLine());
+                    System.out.println("Please enter the share number:");
+                    BigInteger shareNumber = new BigInteger(scanner.nextLine());
+                    shareNumbers[i] = shareNumber;
                     shares[i] = shareValue;
+
                 }
 
-                BigInteger secretBigInt = ShamirSecretSharing.interpolate(shares, field);
+                BigInteger secretBigInt = ShamirSecretSharing.interpolate(shareNumbers ,shares, field);
                 
                 // Convert BigInteger back into a string
                 String secretString = new String(secretBigInt.toByteArray());

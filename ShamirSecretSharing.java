@@ -66,16 +66,16 @@ public BigInteger[] generateShares() {
 }
 
 // interpolates the polynomial first term.
-public static BigInteger interpolate(BigInteger[] yValues, BigInteger primeField) {
+public static BigInteger interpolate(BigInteger[] xValues ,BigInteger[] yValues, BigInteger primeField) {
     BigInteger sum = BigInteger.ZERO;
 
     for (int j = 0; j < yValues.length; j++) {
-        BigInteger xJ = BigInteger.valueOf(j + 1); 
+        BigInteger xJ = xValues[j]; 
         BigInteger lagrangeProduct = BigInteger.ONE;
 
         for (int m = 0; m < yValues.length; m++) {
             if (m != j) {
-                BigInteger xM = BigInteger.valueOf(m + 1); // x value is index + 1
+                BigInteger xM = xValues[m]; // x value is index + 1
                 BigInteger numerator = primeField.subtract(xM); 
                 BigInteger denominator = xJ.subtract(xM).mod(primeField);
                 BigInteger term = numerator.multiply(denominator.modInverse(primeField));
