@@ -70,7 +70,7 @@ public static BigInteger interpolate(BigInteger[] xValues ,BigInteger[] yValues,
     BigInteger sum = BigInteger.ZERO;
 
     for (int j = 0; j < yValues.length; j++) {
-        BigInteger xJ = xValues[j]; 
+        BigInteger xJ = xValues[j];  
         BigInteger lagrangeProduct = BigInteger.ONE;
 
         for (int m = 0; m < yValues.length; m++) {
